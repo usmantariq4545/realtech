@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "282023383037",
+    "project_id": "realtech-981b9",
+    "storage_bucket": "realtech-981b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282023383037:android:a0ef0c4f89ef1f0da2d394",
+        "android_client_info": {
+          "package_name": "com.example.realtech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7zaN0iecS7ypXuBaW07CgE2bmKm4GS-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
