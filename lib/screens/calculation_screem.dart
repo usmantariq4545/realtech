@@ -11,6 +11,9 @@ class CalculationScreen extends StatefulWidget {
 }
 
 class _CalculationScreenState extends State<CalculationScreen> {
+  bool showPredictedPrice =
+      false; // Initially, the predicted price is not shown
+
   late Interpreter? interpreter;
   // declaration for later initialization
   late List<String> locations;
@@ -103,23 +106,23 @@ class _CalculationScreenState extends State<CalculationScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(
-                    context,
-                  );
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios_sharp,
-                  size: 30,
-                  color: Colors.black,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(
+                      context,
+                    );
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios_sharp,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
+                Padding(
                   padding:
                       const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                   child: Column(
@@ -133,35 +136,35 @@ class _CalculationScreenState extends State<CalculationScreen> {
                       ),
                       PText('Fill the details below',
                           fontSize: 20.0, color: Colors.grey),
-                      Spacer(),
+                      SizedBox(
+                        height: 50,
+                      ),
                       PText(
                         'Type',
-                        fontSize: 22.0,
+                        fontSize: 18.0,
                         weight: FontWeight.w500,
                       ),
-                      Expanded(
-                        child: DropdownButtonFormField<String>(
-                          value: selectedPropertyType,
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedPropertyType = value!;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  10), // Border radius set to zero
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[200],
+                      DropdownButtonFormField<String>(
+                        value: selectedPropertyType,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedPropertyType = value!;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                                10), // Border radius set to zero
                           ),
-                          items: propertyTypes.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                          filled: true,
+                          fillColor: Colors.grey[200],
                         ),
+                        items: propertyTypes.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
                       ),
                       PText(
                         'No. of Bedroom',
@@ -176,7 +179,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           fillColor: Color(0xFFEAEAEA),
                           hintText: '1,2',
                           hintStyle:
-                              TextStyle(fontSize: 20.0, letterSpacing: 2),
+                              TextStyle(fontSize: 16.0, letterSpacing: 2),
                           border: OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.circular(10.0),
@@ -199,7 +202,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           fillColor: Color(0xFFEAEAEA),
                           hintText: '1,2',
                           hintStyle:
-                              TextStyle(fontSize: 20.0, letterSpacing: 2),
+                              TextStyle(fontSize: 16.0, letterSpacing: 2),
                           border: OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.circular(10.0),
@@ -222,7 +225,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
                           fillColor: Color(0xFFEAEAEA),
                           hintText: '100',
                           hintStyle:
-                              TextStyle(fontSize: 20.0, letterSpacing: 2),
+                              TextStyle(fontSize: 16.0, letterSpacing: 2),
                           border: OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.circular(10.0),
@@ -237,31 +240,55 @@ class _CalculationScreenState extends State<CalculationScreen> {
                         fontSize: 18.0,
                         weight: FontWeight.w500,
                       ),
-                      Expanded(
-                        child: DropdownButtonFormField<String>(
-                          value: selectedLocation,
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedLocation = value!;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  10), // Border radius set to zero
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[200],
+                      DropdownButtonFormField<String>(
+                        value: selectedLocation,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedLocation = value!;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                                10), // Border radius set to zero
                           ),
-                          items: locations.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                        ),
+                        items: locations.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Visibility(
+                        visible:
+                            showPredictedPrice, // Control visibility based on the boolean variable
+
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.67),
+                              borderRadius: BorderRadius.circular(30)),
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: PText(
+                                  '${predictedPrice.toStringAsFixed(2)} PKR', // Display predicted price here
+                                  weight: FontWeight.w400,
+                                  fontSize: 20,
+                                  color: Colors.white),
+                            ),
+                          ),
                         ),
                       ),
-                      Spacer(),
+                      SizedBox(
+                        height: 50,
+                      ),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -296,6 +323,8 @@ class _CalculationScreenState extends State<CalculationScreen> {
                                   selectedPropertyType);
                               // Store the predicted price in the state
                               setState(() {
+                                showPredictedPrice =
+                                    true; // Set the boolean variable to true to show the predicted price
                                 predictedPrice = output[
                                     0]; // Assuming the predicted price is stored in the first element of the output list
                               });
@@ -318,13 +347,8 @@ class _CalculationScreenState extends State<CalculationScreen> {
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: 20), // Adjust the spacing as needed
-              Text(
-                'Predicted Price: ${predictedPrice.toStringAsFixed(2)}', // Display predicted price here
-                style: TextStyle(fontSize: 20),
-              ),
-            ], //Children
+              ],
+            ),
           ),
         ),
       ),
